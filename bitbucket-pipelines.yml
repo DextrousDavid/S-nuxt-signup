@@ -1,15 +1,27 @@
-# This is a sample build configuration for JavaScript.
-# Check our guides at https://confluence.atlassian.com/x/14UWN for more examples.
-# Only use spaces to indent your .yml configuration.
-# -----
-# You can specify a custom docker image from Docker Hub as your build environment.
 image: node:10.15.3
-
 pipelines:
-  default:
-    - step:
-        caches:
-          - node
-        script: # Modify the commands below to build your repository.
-          - npm install
-          - npm test
+  branches:
+    develop:
+      - step:
+          name: Build
+          script:
+            - npm install
+            - npm run build
+            - npm run generate
+          artifacts:
+            - dist/**
+      - step:
+          name: Deploy
+          deployment: production
+          script:
+            - pipe: atlassian/aws-s3-deploy:0.2.4
+              variables:
+                AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                #       AWS_SECRET_ACCESS_KEY: $AWS_SECRET_ACCESS_KEY
+                AWS_DEFAULT_REGION:  $AWS_DEFAULT_REGION
+                #       AWS_DEFAULT_REGION: $AWS_DEFAULT_REGION
+                AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID
+                #       AWS_ACCESS_KEY_ID: $AWS_ACCESS_KEY_ID"
+                S3_BUCKET: "cloudenly.com"
+                ACL: "public-read"
+                LOCAL_PATH: "dist"
