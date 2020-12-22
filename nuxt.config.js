@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 export default {
   /*
    ** Nuxt rendering mode
@@ -34,7 +35,7 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: [],
+  plugins: ['~/plugins/vue-tel-input'],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -44,6 +45,7 @@ export default {
    ** Nuxt.js dev-modules
    */
   buildModules: [
+    '@nuxtjs/vuetify',
     // Doc: https://github.com/nuxt-community/eslint-module
     // '@nuxtjs/eslint-module',
     // Doc: https://github.com/nuxt-community/nuxt-tailwindcss

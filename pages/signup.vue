@@ -10,7 +10,7 @@ vue/no-duplicate-attributes */ /* eslint-disable vue/no-duplicate-attributes */
           <v-col md="2">
             <div class="d-flex">
               <nuxt-link to="/">
-                <img src="/img/cloudenly-logo.svg" class="ml-5 mt-2" />
+                <img src="~assets/img/cloudenly-logo.svg" class="ml-5 mt-2" />
               </nuxt-link>
             </div>
           </v-col>
@@ -61,20 +61,20 @@ vue/no-duplicate-attributes */ /* eslint-disable vue/no-duplicate-attributes */
                                     label="First Name"
                                     autocomplete
                                     :rules="nameRules"
-                                    filled
-                                    disabled
+                                    
+                                    outlined
+                                    
                                   ></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12" md="6" lg="6">
                                   <v-text-field
+                                  outlined
                                     ref="lastName"
                                     persistent-hint
                                     label="Last Name"
                                     autocomplete
                                     :rules="nameRules"
-                                    filled
-                                    disabled
-                                  >
+                                    >
                                   </v-text-field>
                                 </v-col>
                               </v-row>
@@ -85,12 +85,12 @@ vue/no-duplicate-attributes */ /* eslint-disable vue/no-duplicate-attributes */
                                   style="
                                     padding: 10px;
                                     margin-bottom: 29px;
-                                    background-color: #eee;
+                                    background-color: #fff;
                                   "
                                   required
                                   placeholder="Mobile Number"
-                                  filled
-                                  disabled
+                                  
+                                  
                                 ></vue-tel-input>
                               </no-ssr>
 
@@ -104,8 +104,8 @@ vue/no-duplicate-attributes */ /* eslint-disable vue/no-duplicate-attributes */
                                 :rules="emailRules"
                                 required
                                 persistent-hint
-                                filled
-                                disabled
+                                
+                                
                               ></v-text-field>
                               <!-- <v-text-field
                                   ref="password"
@@ -132,8 +132,8 @@ vue/no-duplicate-attributes */ /* eslint-disable vue/no-duplicate-attributes */
                                 :rules="nameRules"
                                 outlined
                                 required
-                                filled
-                                disabled
+                                
+                                
                               >
                               </v-text-field>
                             </v-col>
