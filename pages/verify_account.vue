@@ -45,7 +45,7 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                         autocomplete
                       >
                         <h1 align="left" class="h1 create-account">
-                          Create an Account
+                          Enter your verification code
                         </h1>
                         <v-row
                           justify="center"
@@ -56,103 +56,28 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                           no-gutters
                         >
                           <template>
+
                             <v-col cols="12" md="12" sm="12" xs="12">
-                              <v-row>
-                                <v-col cols="12" sm="12" md="6" lg="6">
-                                  <v-text-field
-                                    ref="firstName"
-                                    persistent-hint
-                                    label="First Name"
-                                    autocomplete
-                                    :rules="nameRules"
-                                    
-                                    outlined
-                                    
-                                  ></v-text-field>
-                                </v-col>
-                                <v-col cols="12" sm="12" md="6" lg="6">
-                                  <v-text-field
-                                  outlined
-                                    ref="lastName"
-                                    persistent-hint
-                                    label="Last Name"
-                                    autocomplete
-                                    :rules="nameRules"
-                                    >
-                                  </v-text-field>
-                                </v-col>
-                              </v-row>
-
-                              <!-- Phone input goes here -->
-                              <no-ssr>
-                                <vue-tel-input
-                                  style="
-                                    padding: 10px;
-                                    margin-bottom: 29px;
-                                    background-color: #fff;
-                                  "
-                                  required
-                                  placeholder="Mobile Number"
-                                  
-                                  
-                                ></vue-tel-input>
-                              </no-ssr>
-
-                              <!-- Phone input ends here -->
-
-                              <v-text-field
-                                ref="email"
-                                outlined
-                                label="Work Email Address"
-                                autocomplete
-                                :rules="emailRules"
-                                required
-                                persistent-hint
+                              
+                              <div class="md:mt-1">
+                                <!-- code input goes here -->
+                                <CodeInput :loading="false" class="input" v-on:change="onChange" v-on:complete="onComplete"/>
+                              </div>
                                 
-                                
-                              ></v-text-field>
-                              <!-- <v-text-field
-                                  ref="password"
-                                  v-model="authCredentials.authPassword"
-                                  type="password"
-                                  single-line
-                                  label="Password"
-                                  text
-                                  :rules="passwordRules"
-                                  :append-icon="
-                                    show1 ? 'visibility' : 'visibility_off'
-                                  "
-                                  :append-icon-cb="() => (show1 = !show1)"
-                                  :type1="show1 ? 'password' : 'text'"
-                                  required
-                                  @click:append="show1 = !show1"
-                                >
-                                </v-text-field> -->
-                              <v-text-field
-                                ref="referenceCode"
-                                persistent-hint
-                                label="Reference Code"
-                                autocomplete
-                                :rules="nameRules"
-                                outlined
-                                required
-                                
-                                
-                              >
-                              </v-text-field>
+                              
                             </v-col>
                             <v-col>
                               <v-row>
                                 <v-col cols="6" xs="12" sm="12" md="8" lg="8">
-                                  <p style="font-size: 12px">
-                                    <!-- <a href="/recover_password" class="txt-primary"
+                                  <!-- <p style="font-size: 12px">
+                                    <a href="/recover_password" class="txt-primary"
                                   >Forgot Password ?
-                                </a> -->
+                                </a>
                                     By clicking on Continue, you accept our
                                     <span class="term">Terms of service</span>
                                     and
                                     <span class="term">Privacy Policy</span>
-                                  </p>
+                                  </p> -->
                                 </v-col>
 
                                 <v-col
@@ -175,10 +100,8 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                                     dark
                                     medium
                                     align="right"
-                                   
                                     @click="validate"
-                                    to="/verify_account"
-                                    >Continue</v-btn
+                                    >verify</v-btn
                                   >
                                 </v-col>
                               </v-row>
@@ -186,8 +109,8 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                           </template>
                         </v-row>
                         <p class="d-flex justify-end already-have">
-                          Already have an account?
-                          <span class="have-an-account">Sign in</span>
+                          Didn't get the email?
+                          <span class="have-an-account">Click here</span>
                         </p>
                       </v-form>
                     </v-flex>
@@ -206,16 +129,21 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
             class="pa-0"
           >
             <div class="main-img place-center">
-              <div class="tw-text-left place-center" style="width: 55%">
-                <h2
-                  class="h2 leading-8 transform-with-cloudenly text-white font-semibold"
+              <div class="tw-text-left " style="width: 55%">
+                <h1
+                  class="h1 leading-8 awesome text-white font-semibold"
                 >
-                  Transform with Cloudenly and experience the Power of a unified
-                  business operation
-                </h2>
+                  Awesome,
+                </h1>
+                <h4
+                  class="h4 leading-8  text-white font-semibold verify-account"
+                >
+                  Your account has been created
+                </h4>
                 <div class="mt-4 pricing-apps text-white">
-                  CRM. Sales. Purchase. Inventory. Operations. Commerce.
-                  Finance. Cloud Storage. HRM.
+                  One last step and you are all good to go. An
+email with a verification code has been
+sent to you.
                 </div>
               </div>
             </div>
@@ -227,10 +155,15 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
 </template>
 <script>
 import Theme from './../theme'
+// import CodeInput from 'vue-verification-code-input'
+import OtpInput from '@bachdgvn/vue-otp-input'
 export default {
   layout: 'signupLayout',
   components: {
     theme: Theme,
+    // CodeInput,
+    OtpInput
+  
   },
   data() {
     return {
@@ -268,8 +201,20 @@ export default {
     }
   },
   methods: {
+    onChange(v) {
+      console.log("onChange ", v);
+    },
+    onComplete(v) {
+      console.log("onComplete ", v);
+    },
     validate() {
       this.$refs.form.validate()
+    },
+    handleOnComplete(value) {
+      console.log("OTP: ", value);
+    },
+    handleOnChange(value) {
+      console.log("OTP: ", value);
     },
   },
   // computed: {
@@ -468,13 +413,37 @@ export default {
 }
 </script>
 
+
 <style scoped>
+.otp-input {
+  width: 40px;
+  height: 40px;
+  padding: 5px;
+  margin: 0 10px;
+  font-size: 20px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  textalign: "center";
+}
+.error {
+  border: 1px solid red !important;
+}
+
+.awesome {
+  font-size: 45px;
+  margin-bottom: 13px
+}
+
+.verify-account {
+  font-size: 20px;
+}
+
 .v-application .pa-3 {
   padding: 3px !important;
 }
 
 .already-have {
-  font-size: 12px;
+  font-size: 13px;
 }
 /* .telephone {
   padding: 10px;
@@ -511,7 +480,7 @@ export default {
   color: #38b938;
 }
 .have-an-account {
-  color: #38b938;
+  color: #1976d2;
   margin-left: 2px;
 }
 .transform-with-cloudenly {

@@ -35,7 +35,7 @@ export default {
    ** Plugins to load before mounting the App
    ** https://nuxtjs.org/guide/plugins
    */
-  plugins: ['~/plugins/vue-tel-input'],
+  plugins: ['~/plugins/vue-tel-input', { src: '~plugins/vue-verification-code-input', ssr: false}],
   /*
    ** Auto import components
    ** See https://nuxtjs.org/api/configuration-components
@@ -75,5 +75,7 @@ export default {
    ** Build configuration
    ** See https://nuxtjs.org/api/configuration-build/
    */
-  build: {},
+  build: {
+    vendor: ['vue-verification-code-input']
+  },
 }
