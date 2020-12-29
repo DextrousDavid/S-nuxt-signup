@@ -1,10 +1,4 @@
 <!-- eslint-disable prettier/prettier -->
-<!-- Used signup in place of index -->
-
-<!-- eslint-disable vue/no-v-html */ /* eslint-disable vue/no-v-html --> <!--
-eslint-disable no-console --> <!-- eslint-disable no-console --> <!-- eslint-disable
-no-unused-vars --> <!-- eslint-disable eqeqeq --> <!-- eslint-disable
-vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes -->
 
 <template>
   <v-app>
@@ -56,15 +50,16 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                           no-gutters
                         >
                           <template>
-
                             <v-col cols="12" md="12" sm="12" xs="12">
-                              
                               <div class="md:mt-1">
                                 <!-- code input goes here -->
-                                <CodeInput :loading="false" class="input" v-on:change="onChange" v-on:complete="onComplete"/>
+                                <CodeInput
+                                  :loading="false"
+                                  class="input"
+                                  v-on:change="onChange"
+                                  v-on:complete="onComplete"
+                                />
                               </div>
-                                
-                              
                             </v-col>
                             <v-col>
                               <v-row>
@@ -129,21 +124,18 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
             class="pa-0"
           >
             <div class="main-img place-center">
-              <div class="tw-text-left " style="width: 55%">
-                <h1
-                  class="h1 leading-8 awesome text-white font-semibold"
-                >
+              <div class="tw-text-left" style="width: 55%">
+                <h1 class="h1 leading-8 awesome text-white font-semibold">
                   Awesome,
                 </h1>
                 <h4
-                  class="h4 leading-8  text-white font-semibold verify-account"
+                  class="h4 leading-8 text-white font-semibold verify-account"
                 >
                   Your account has been created
                 </h4>
                 <div class="mt-4 pricing-apps text-white">
-                  One last step and you are all good to go. An
-email with a verification code has been
-sent to you.
+                  One last step and you are all good to go. An email with a
+                  verification code has been sent to you.
                 </div>
               </div>
             </div>
@@ -162,8 +154,7 @@ export default {
   components: {
     theme: Theme,
     // CodeInput,
-    OtpInput
-  
+    // OtpInput,
   },
   data() {
     return {
@@ -202,19 +193,19 @@ export default {
   },
   methods: {
     onChange(v) {
-      console.log("onChange ", v);
+      console.log('onChange ', v)
     },
     onComplete(v) {
-      console.log("onComplete ", v);
+      console.log('onComplete ', v)
     },
     validate() {
       this.$refs.form.validate()
     },
     handleOnComplete(value) {
-      console.log("OTP: ", value);
+      console.log('OTP: ', value)
     },
     handleOnChange(value) {
-      console.log("OTP: ", value);
+      console.log('OTP: ', value)
     },
   },
   // computed: {
@@ -413,7 +404,6 @@ export default {
 }
 </script>
 
-
 <style scoped>
 .otp-input {
   width: 40px;
@@ -423,7 +413,7 @@ export default {
   font-size: 20px;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.3);
-  textalign: "center";
+  textalign: 'center';
 }
 .error {
   border: 1px solid red !important;
@@ -431,7 +421,7 @@ export default {
 
 .awesome {
   font-size: 45px;
-  margin-bottom: 13px
+  margin-bottom: 13px;
 }
 
 .verify-account {

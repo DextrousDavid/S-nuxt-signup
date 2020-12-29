@@ -177,7 +177,7 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                                     align="right"
                                    
                                     @click="validate"
-                                    to="/verify_account"
+                                    
                                     >Continue</v-btn
                                   >
                                 </v-col>
