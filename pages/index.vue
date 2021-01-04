@@ -1,10 +1,6 @@
-<!-- eslint-disable prettier/prettier -->
-<!-- Used signup in place of index -->
+<!-- eslint-disable -->
 
-<!-- eslint-disable vue/no-v-html */ /* eslint-disable vue/no-v-html --> <!--
-eslint-disable no-console --> <!-- eslint-disable no-console --> <!-- eslint-disable
-no-unused-vars --> <!-- eslint-disable eqeqeq --> <!-- eslint-disable
-vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes -->
+
 
 <template>
   <v-app>
@@ -18,6 +14,25 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
               </nuxt-link>
             </div>
           </v-col>
+          
+    <v-snackbar
+      v-model="snackbar"
+      :bottom="y === 'bottom'"
+      :color="color"
+      :left="x === 'left'"
+      
+      :right="x === 'right'"
+      :timeout="3000"
+      :top="y === 'top'"
+      
+      
+    >
+    {{snackbarText}}
+    <!-- <v-btn text @click="snackbar = false">
+      x
+    </v-btn> -->
+    </v-snackbar>
+                           
           <v-col cols="12" md="4" class="pa-0 placement-relative">
             <v-layout class="ml-12">
               <v-card
@@ -60,20 +75,20 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                               <v-row>
                                 <v-col cols="12" sm="12" md="6" lg="6">
                                   <v-text-field
-                                    ref="firstName"
+                                    ref="fname"
+                                    v-model="authCredentials.fname"
                                     persistent-hint
                                     label="First Name"
                                     autocomplete
-                                    :rules="nameRules"
-                                    
-                                    outlined
+                                    :rules="nameRules"                                                             outlined
                                     
                                   ></v-text-field>
                                 </v-col>
                                 <v-col cols="12" sm="12" md="6" lg="6">
                                   <v-text-field
-                                  outlined
-                                    ref="lastName"
+                                  ref="lname"
+                                    v-model="authCredentials.lname"
+                                    outlined
                                     persistent-hint
                                     label="Last Name"
                                     autocomplete
@@ -86,6 +101,7 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                               <!-- Phone input goes here -->
                               <no-ssr>
                                 <vue-tel-input
+                                  v-model="authCredentials.phoneNo"
                                   style="
                                     padding: 10px;
                                     margin-bottom: 29px;
@@ -102,6 +118,7 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
 
                               <v-text-field
                                 ref="email"
+                                v-model="authCredentials.email"
                                 outlined
                                 label="Work Email Address"
                                 autocomplete
@@ -129,8 +146,8 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                                 >
                                 </v-text-field> -->
                               <v-text-field
-                                ref="referenceCode"
-                                persistent-hint
+                                ref="referrerCode"
+                                v-model="authCredentials.referrerCode"                              persistent-hint
                                 label="Reference Code"
                                 autocomplete
                                 :rules="nameRules"
@@ -172,13 +189,14 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
                                   <v-btn
                                     v-if="!authenticatingUser"
                                     color="#4881DB"
-                                    dark
+                                    style="color: #eee"
                                     medium
                                     align="right"
-                                   
                                     @click="validate"
+                                    :disabled='!isComplete'
+                                    elevation="2"
                                     
-                                    >Continue</v-btn
+                                    >{{ loading }}</v-btn
                                   >
                                 </v-col>
                               </v-row>
@@ -223,8 +241,11 @@ vue/no-duplicate-attributes --> <!-- eslint-disable vue/no-duplicate-attributes 
         </v-row>
       </div>
     </theme>
+    
   </v-app>
 </template>
+<!-- eslint-disable -->
+
 <script>
 import Theme from './../theme'
 export default {
@@ -234,7 +255,16 @@ export default {
   },
   data() {
     return {
+      loading: 'Continue',
+      verify_account: 'verify_account',
+      snackbar: false,
+      color: 'success',
+        mode: '',
+        
+        x: 'left',
+        y: 'top',
       awaitVerify: false,
+      snackbarText: 'Looks like there was an issue creating your account',
       valid: true,
       color: 'primary',
       dark: null,
@@ -243,16 +273,17 @@ export default {
       domain: false,
       domainName: '',
       domainChecking: false,
-      authCredentials: {
-        accountId: 'isolamotor',
-        firstName: '',
-        lastName: '',
-        email: '',
-        authPassword: '',
+        referrerCode: '',
         userLogin: false,
+        authPassword: '',
+        accountId: 'isolamotor',
+      authCredentials: {
+        fname: '',
+        lname: '',
+        email: '',
+        dialCode: '234',
+        phoneNo: '',
       },
-      userId: '',
-      email: '',
       orgId: '',
       isvalid: true,
       passwordRules: [(v) => !!v || ''],
@@ -268,10 +299,30 @@ export default {
     }
   },
   methods: {
-    validate() {
+    async validate() {
+      try {
+      await this.$axios.post('/signup', this.authCredentials)
       this.$refs.form.validate()
+      this.snackbar = true
+      this.color = 'success'
+      this.loading = 'Loading...'
+      this.snackbarText = `Hi ${this.authCredentials.fname}, Kindly check your email for an OTP code.`
+      // this.verify_account = '/verify_account'
+      this.$router.push({name: 'verify_account'})
+      } catch(error) {
+        this.snackbar = true
+        this.color = 'error'
+        this.snackbarText = `This email has already been used. Check your internet connection...`
+
+      }
+      // this.$store.dispatch('snackbar/setSnackbar', {text: 'Thanks for signing in'})
     },
   },
+  computed: {
+  isComplete () {
+    return this.authCredentials.fname && this.authCredentials.lname && this.authCredentials.email;
+  }
+}
   // computed: {
   //   addSidebar() {
   //     return this.$route.meta.addSidebar
@@ -362,8 +413,8 @@ export default {
   //   setVariables() {
   //     this.authCredentials.alias = this.$route.query.alias
   //     this.authCredentials.email = this.$route.query.email
-  //     this.authCredentials.firstName = this.$route.query.firstName
-  //     this.authCredentials.lastName = this.$route.query.lastName
+  //     this.authCredentials.fname = this.$route.query.fname
+  //     this.authCredentials.lname = this.$route.query.lname
   //   },
   //   proceedWithLogin() {
   //     const linchpin = localStorage.getItem('linchpin')

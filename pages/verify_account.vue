@@ -1,4 +1,6 @@
+/* eslint-disable import/order */
 <!-- eslint-disable prettier/prettier -->
+<!-- eslint-disable -->
 
 <template>
   <v-app>
@@ -56,23 +58,14 @@
                                 <CodeInput
                                   :loading="false"
                                   class="input"
-                                  v-on:change="onChange"
-                                  v-on:complete="onComplete"
+                                  type="number"
+                                  v-model="authEmailVerification"
                                 />
                               </div>
                             </v-col>
                             <v-col>
                               <v-row>
                                 <v-col cols="6" xs="12" sm="12" md="8" lg="8">
-                                  <!-- <p style="font-size: 12px">
-                                    <a href="/recover_password" class="txt-primary"
-                                  >Forgot Password ?
-                                </a>
-                                    By clicking on Continue, you accept our
-                                    <span class="term">Terms of service</span>
-                                    and
-                                    <span class="term">Privacy Policy</span>
-                                  </p> -->
                                 </v-col>
 
                                 <v-col
@@ -95,7 +88,7 @@
                                     dark
                                     medium
                                     align="right"
-                                    @click="validate"
+                                    @click="verifyEmail"
                                     >verify</v-btn
                                   >
                                 </v-col>
@@ -148,7 +141,7 @@
 <script>
 import Theme from './../theme'
 // import CodeInput from 'vue-verification-code-input'
-import OtpInput from '@bachdgvn/vue-otp-input'
+// import OtpInput from '@bachdgvn/vue-otp-input'
 export default {
   layout: 'signupLayout',
   components: {
@@ -167,16 +160,10 @@ export default {
       domain: false,
       domainName: '',
       domainChecking: false,
-      authCredentials: {
-        accountId: 'isolamotor',
-        firstName: '',
-        lastName: '',
-        email: '',
-        authPassword: '',
-        userLogin: false,
+      authEmailVerification: {
+        userId: '',
+        emailVerificationCode: '',
       },
-      userId: '',
-      email: '',
       orgId: '',
       isvalid: true,
       passwordRules: [(v) => !!v || ''],
@@ -192,20 +179,25 @@ export default {
     }
   },
   methods: {
-    onChange(v) {
-      console.log('onChange ', v)
-    },
-    onComplete(v) {
-      console.log('onComplete ', v)
-    },
-    validate() {
+    async verifyEmail() {
+      await this.$axios.post('/code/verify', {
+        userId: this.authEmailVerification.userId,
+        emailVerificationCode: this.authEmailVerification.emailVerificationCode,
+      })
       this.$refs.form.validate()
-    },
-    handleOnComplete(value) {
-      console.log('OTP: ', value)
-    },
-    handleOnChange(value) {
-      console.log('OTP: ', value)
+      // this.snackbar = true
+      // this.color = 'success'
+      // this.loading = 'Loading...'
+      // this.snackbarText = `Hi ${this.authCredentials.fname}, Kindly check your email for an OTP code.`
+      // this.verify_account = '/verify_account'
+      // this.$router.push({name: 'verify_account'})
+      // } catch(error) {
+      //   this.snackbar = true
+      //   this.color = 'error'
+      //   this.snackbarText = `This email has already been used. Check your internet connection...`
+
+      // }
+      // this.$store.dispatch('snackbar/setSnackbar', {text: 'Thanks for signing in'})
     },
   },
   // computed: {
