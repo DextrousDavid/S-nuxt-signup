@@ -58,11 +58,11 @@
                                 <CodeInput
                                   :loading="false"
                                   class="input"
-                                  type="number"
-                                  v-model="authEmailVerification"
+                                  type="number" v-on:complete="onComplete"
                                 />
                               </div>
                             </v-col>
+                            
                             <v-col>
                               <v-row>
                                 <v-col cols="6" xs="12" sm="12" md="8" lg="8">
@@ -142,6 +142,7 @@
 import Theme from './../theme'
 // import CodeInput from 'vue-verification-code-input'
 // import OtpInput from '@bachdgvn/vue-otp-input'
+import { mapState } from "vuex"
 export default {
   layout: 'signupLayout',
   components: {
@@ -178,12 +179,22 @@ export default {
       readOnly: true,
     }
   },
+  computed: {
+    ...mapState(["temp"])
+  },
   methods: {
     async verifyEmail() {
-      await this.$axios.post('/code/verify', {
-        userId: this.authEmailVerification.userId,
-        emailVerificationCode: this.authEmailVerification.emailVerificationCode,
-      })
+      this.authEmailVerification.userId = this.temp.userId
+      try {
+        await this.$axios.post('/code/verify', this.authEmailVerification)
+      }
+       catch (error) {
+        console.log(error)
+      }
+      // await this.$axios.post('/code/verify', {
+      //   userId: this.authEmailVerification.userId,
+      //   emailVerificationCode: this.authEmailVerification.emailVerificationCode,
+      // })
       this.$refs.form.validate()
       // this.snackbar = true
       // this.color = 'success'
@@ -199,6 +210,9 @@ export default {
       // }
       // this.$store.dispatch('snackbar/setSnackbar', {text: 'Thanks for signing in'})
     },
+    onComplete(v) {
+      this.authEmailVerification.emailVerificationCode =  v;
+    }
   },
   // computed: {
   //   addSidebar() {

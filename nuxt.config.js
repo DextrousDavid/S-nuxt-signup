@@ -97,7 +97,8 @@ export default {
         endpoints: {
           login: { url: '/api/auth/login', method: 'post' },
           logout: { url: '/api/auth/logout', method: 'post' },
-          user: { url: '/api/auth/user', method: 'get' }
+          userId: { url: '/code/verify', method: 'post', propertyName: 'userId'},
+          user: { url: '/api/auth/user', method: 'get'},
         }
       }
     }

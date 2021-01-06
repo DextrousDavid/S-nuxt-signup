@@ -301,18 +301,21 @@ export default {
   methods: {
     async validate() {
       try {
-      await this.$axios.post('/signup', this.authCredentials)
+      const res = await this.$axios.post('/signup', this.authCredentials)
       this.$refs.form.validate()
       this.snackbar = true
       this.color = 'success'
       this.loading = 'Loading...'
       this.snackbarText = `Hi ${this.authCredentials.fname}, Kindly check your email for an OTP code.`
+
+      const { userId } = res.data
+      this.$store.commit('temp/addUserId', userId)
       // this.verify_account = '/verify_account'
       this.$router.push({name: 'verify_account'})
       } catch(error) {
         this.snackbar = true
         this.color = 'error'
-        this.snackbarText = `This email has already been used. Check your internet connection...`
+        this.snackbarText = `Sorry, This email has already been used...`
 
       }
       // this.$store.dispatch('snackbar/setSnackbar', {text: 'Thanks for signing in'})
