@@ -306,12 +306,15 @@ export default {
       this.snackbar = true
       this.color = 'success'
       this.loading = 'Loading...'
-      this.snackbarText = `Hi ${this.authCredentials.fname}, Kindly check your email for an OTP code.`
+      this.snackbarText = `Hi ${this.authCredentials.fname}, Kindly check your email for a verification code.`
 
       const { userId } = res.data
       this.$store.commit('temp/addUserId', userId)
       // this.verify_account = '/verify_account'
-      this.$router.push({name: 'verify_account'})
+      setTimeout(() => {
+        this.$router.push({name: 'verify_account'})
+
+      }, 4000)
       } catch(error) {
         this.snackbar = true
         this.color = 'error'

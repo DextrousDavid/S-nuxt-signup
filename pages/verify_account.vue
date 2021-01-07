@@ -1,4 +1,4 @@
-/* eslint-disable import/order */
+
 <!-- eslint-disable prettier/prettier -->
 <!-- eslint-disable -->
 
@@ -14,6 +14,23 @@
               </nuxt-link>
             </div>
           </v-col>
+           <v-snackbar
+              v-model="snackbar"
+              :bottom="y === 'bottom'"
+              :color="color"
+              :left="x === 'left'"
+              
+              :right="x === 'right'"
+              :timeout="3000"
+              :top="y === 'top'"
+              
+      
+    >
+    {{snackbarText}}
+    <!-- <v-btn text @click="snackbar = false">
+      x
+    </v-btn> -->
+    </v-snackbar>
           <v-col cols="12" md="4" class="pa-0 placement-relative">
             <v-layout class="ml-12">
               <v-card
@@ -61,6 +78,54 @@
                                   type="number" v-on:complete="onComplete"
                                 />
                               </div>
+                              <div v-if="isValidCode" class="md:mt-10">
+                                <v-text-field
+                          v-model="password"
+                          label="Password"
+                          name="password"
+                          :append-icon="show1 ? 'mdi-eye-off' : 'mdi-eye'"
+                          :type="show1 ? 'password' : 'text'"
+                          :rules="passwordRules"
+                          @click:append="show1 = !show1"
+                          solo
+                        />
+
+                      <v-text-field
+                        v-model="confirmPassword"
+                        label="Confirm Password"
+                        name="confirmPassword"
+                        :append-icon="show2 ? 'mdi-eye-off' : 'mdi-eye'"
+                        :type="show2 ? 'password' : 'text'"
+                        :rules="confirmPasswordRules"
+                        @click:append="show2 = !show2"
+                        solo
+                      /><div>
+                      <v-row>
+                                <v-col cols="6" xs="12" sm="12" md="8" lg="8">
+                                </v-col>
+
+                                <v-col
+                                  class="d-flex justify-end"
+                                  cols="6"
+                                  xs="12"
+                                  sm="12"
+                                  md="4"
+                                  lg="4"
+                                >
+                                  <v-btn
+                                    v-if="isValidCode"
+                                    color="#4881DB"
+                                    dark
+                                    medium
+                                    align="right"
+                                    @click="verifyEmail"
+                                    >submit</v-btn
+                                  >
+                                </v-col>
+                              </v-row>
+
+                                  </div>
+                              </div>
                             </v-col>
                             
                             <v-col>
@@ -83,7 +148,7 @@
                                     color="primary"
                                   ></v-progress-circular>
                                   <v-btn
-                                    v-if="!authenticatingUser"
+                                    v-if="!isValidCode"
                                     color="#4881DB"
                                     dark
                                     medium
@@ -138,10 +203,9 @@
     </theme>
   </v-app>
 </template>
+<!-- eslint-disable -->
 <script>
 import Theme from './../theme'
-// import CodeInput from 'vue-verification-code-input'
-// import OtpInput from '@bachdgvn/vue-otp-input'
 import { mapState } from "vuex"
 export default {
   layout: 'signupLayout',
@@ -152,9 +216,15 @@ export default {
   },
   data() {
     return {
+      verifying: 'Verify',
+      snackbar: false,
+      color: 'success',
+      snackbarText: '',
+       mode: '',  
+        x: 'left',
+        y: 'top',
       awaitVerify: false,
       valid: true,
-      color: 'primary',
       dark: null,
       errorMsgVisible: false,
       errorMsg: '',
@@ -165,6 +235,7 @@ export default {
         userId: '',
         emailVerificationCode: '',
       },
+      isValidCode: false,
       orgId: '',
       isvalid: true,
       passwordRules: [(v) => !!v || ''],
@@ -175,8 +246,20 @@ export default {
         (v) => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || '',
       ],
       show1: true,
+      show2: true,
       authenticatingUser: false,
       readOnly: true,
+      password: '',
+      confirmPassword: '',
+      passwordRules: [
+        (value) => !!value || 'Please type password.',
+        (value) => (value && value.length >= 6) || 'minimum 6 characters',
+      ],
+      confirmPasswordRules: [
+        (value) => !!value || 'type confirm password',
+        (value) =>
+          value === this.password || 'The password confirmation does not match.',
+      ],
     }
   },
   computed: {
@@ -187,9 +270,17 @@ export default {
       this.authEmailVerification.userId = this.temp.userId
       try {
         await this.$axios.post('/code/verify', this.authEmailVerification)
+      this.snackbar = true
+      this.color = 'success'
+      this.snackbarText = `You entered a valid Activation Code`
+      this.isValidCode = true
+      this.verifying = 'Verifying...'
       }
        catch (error) {
-        console.log(error)
+        this.snackbar = true
+        this.color = 'error'
+        this.snackbarText = `Invalid Activation code`
+        this.isValidCode = false
       }
       // await this.$axios.post('/code/verify', {
       //   userId: this.authEmailVerification.userId,
