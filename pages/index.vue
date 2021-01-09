@@ -80,7 +80,7 @@
                                     persistent-hint
                                     label="First Name"
                                     autocomplete
-                                    :rules="nameRules"                                                             outlined
+                                    :rules="nameRules"     outlined
                                     
                                   ></v-text-field>
                                 </v-col>
@@ -217,7 +217,7 @@
           <v-col
             xs="12"
             sm="12"
-            md="12"
+            md="6"
             lg="6"
             xl="6"
             style="color: white"

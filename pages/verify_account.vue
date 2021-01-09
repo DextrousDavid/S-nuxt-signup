@@ -118,7 +118,7 @@
                                     dark
                                     medium
                                     align="right"
-                                    @click="verifyEmail"
+                                    @click="activateAccount"
                                     >submit</v-btn
                                   >
                                 </v-col>
@@ -161,9 +161,10 @@
                             </v-col>
                           </template>
                         </v-row>
-                        <p class="d-flex justify-end already-have">
+                        <p v-if="!isValidCode" class="d-flex justify-end already-have">
                           Didn't get the email?
-                          <span class="have-an-account">Click here</span>
+                          
+                          <span @click="resendVerificationCode" class="have-an-account" type="button">Click here</span>
                         </p>
                       </v-form>
                     </v-flex>
@@ -175,7 +176,7 @@
           <v-col
             xs="12"
             sm="12"
-            md="12"
+            md="6"
             lg="6"
             xl="6"
             style="color: white"
@@ -272,38 +273,59 @@ export default {
         await this.$axios.post('/code/verify', this.authEmailVerification)
       this.snackbar = true
       this.color = 'success'
-      this.snackbarText = `You entered a valid Activation Code`
+      this.snackbarText = `You entered a valid verification Code`
       this.isValidCode = true
       this.verifying = 'Verifying...'
       }
        catch (error) {
         this.snackbar = true
         this.color = 'error'
-        this.snackbarText = `Invalid Activation code`
+        this.snackbarText = `Invalid verification code`
         this.isValidCode = false
       }
-      // await this.$axios.post('/code/verify', {
-      //   userId: this.authEmailVerification.userId,
-      //   emailVerificationCode: this.authEmailVerification.emailVerificationCode,
-      // })
+      // redundant
       this.$refs.form.validate()
-      // this.snackbar = true
-      // this.color = 'success'
-      // this.loading = 'Loading...'
-      // this.snackbarText = `Hi ${this.authCredentials.fname}, Kindly check your email for an OTP code.`
-      // this.verify_account = '/verify_account'
-      // this.$router.push({name: 'verify_account'})
-      // } catch(error) {
-      //   this.snackbar = true
-      //   this.color = 'error'
-      //   this.snackbarText = `This email has already been used. Check your internet connection...`
-
-      // }
-      // this.$store.dispatch('snackbar/setSnackbar', {text: 'Thanks for signing in'})
     },
+    async activateAccount() {
+      this.authEmailVerification.userId = this.temp.userId
+      try {
+        await this.$axios.post('/account/activate', { 
+        userId: this.authEmailVerification.userId,
+        emailVerificationCode: this.authEmailVerification.emailVerificationCode,
+        password: this.password})
+      this.snackbar = true
+      this.color = 'success'
+      this.snackbarText = `You have successfully activated your account`
+      }
+       catch (error) {
+        this.snackbar = true
+        this.color = 'error'
+        this.snackbarText = `An error occured. Kindly complete all fields`
+       
+      }
+      // redundant
+      this.$refs.form.validate()
+    },
+     async resendVerificationCode() {
+        this.authEmailVerification.userId = this.temp.userId
+      try {
+        await this.$axios.post('/signup/resend-verification', {userId: this.authEmailVerification.userId,
+        emailVerificationCode: this.authEmailVerification.emailVerificationCode,
+        })
+      this.snackbar = true
+      this.color = 'success'
+      this.snackbarText = `A new verification code has been sent to your email`
+      }
+       catch (error) {
+        this.snackbar = true
+        this.color = 'error'
+        this.snackbarText = `An error occured. Try again...`
+       
+      }
+      },
     onComplete(v) {
       this.authEmailVerification.emailVerificationCode =  v;
-    }
+    },
   },
   // computed: {
   //   addSidebar() {
